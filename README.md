@@ -4,4 +4,4 @@ In this paper, we incorporate momentum into Stochastic Parallel Gradient Descent
 
 Code will be released soon.
 
-Experimental results and demo are available at [demo](demo)
+Experimental results and demonstrations are available at [demo](demo)
