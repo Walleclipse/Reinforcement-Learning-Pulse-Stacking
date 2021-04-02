@@ -1,4 +1,4 @@
-#Combining the power of reinforcement learning and stochastic parallel gradient decent for optimizing the delay lines of pulse stacking
+# Combining the power of reinforcement learning and stochastic parallel gradient decent for optimizing the delay lines of pulse stacking
 
 ## Experiments on controlling 7-stage delay line coherent pulse stacking (combining 128 pulse)
 
