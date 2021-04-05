@@ -39,7 +39,7 @@ SAC-SPGDM and SAC successfully control the system to obtain good combined pulses
 
 SAC-SPGDM still has the fastest convergence speed among them. It is worth noting that, as a training-free method, SPGDM achieved the maximum point faster than SPGD.  
 
-<img src="pulse-stacking-gif/5-stage-CPS@SAC-SPGDM@good-init.gif" width="400" height="300" alt="SAC-SPGDM from good initial point"/><img src=""pulse-stacking-gif/5-stage-CPS@SAC@good-init.gif" width="400" height="300" alt="SAC from good initial point on combining 32 pulses."/>
+<img src="pulse-stacking-gif/5-stage-CPS@SAC-SPGDM@good-init.gif" width="400" height="300" alt="SAC-SPGDM from good initial point"/><img src="pulse-stacking-gif/5-stage-CPS@SAC@good-init.gif" width="400" height="300" alt="SAC from good initial point on combining 32 pulses."/>
 
 <img src="pulse-stacking-gif/5-stage-CPS@SPGDM@good-init.gif" width="400" height="300" alt="SPGDM from good initial point"/><img src="pulse-stacking-gif/5-stage-CPS@SPGD@good-init.gif" width="400" height="300" alt="SPGD from good initial point on combining 32 pulses."/>
 
