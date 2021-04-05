@@ -1,8 +1,8 @@
 # SAC-SPGDM
 
 ## Contents
-1. [Combining 128 pulses](#experiments-on-combining-128-pulses)
-  1. [Controlling from bad initial state](#controlling-7-stage-coherent-pulse-stacking-from-the-bad-initial-point) 
+1. [Combining 128 pulses](#experiments-on-combining-128-pulses)  
+  1.1 [Controlling from bad initial state](#controlling-7-stage-coherent-pulse-stacking-from-the-bad-initial-point) 
 2. [Combining 32 pulses](#experiments-on-combining-32-pulses)
 
 
@@ -20,9 +20,9 @@ In this scenario SPGDM (and SPGD) cannot find the maximum peak power, and contro
 
 In this scenario, SAC-SPGDM, SAC as well as SPGDM successfully control the system to obtain good combined pulses. This is consistent with the previous conclusion that, SPGD based controller is a good choice when the starting point is near a maximum. SAC-SPGDM still has the fastest convergence speed among them. It is worth noting that, as a training-free method, SPGDM achieved the maximum point with faster speed than SPGD.  
 
-<img src="pulse-stacking-gif/7-stage-CPS@SAC-SPGDM@good-init.gif" width="400" height="300" alt="SAC-SPGDM from good initial point"/><img src=""pulse-stacking-gif/7-stage-CPS@SAC@good-init.gif" width="400" height="300" alt="SAC from good initial point on combining 128 pulses."/>
+<img src="pulse-stacking-gif/7-stage-CPS@SAC-SPGDM@good-init.gif" width="400" height="300" alt="SAC-SPGDM from good initial point"/><img src="pulse-stacking-gif/7-stage-CPS@SAC@good-init.gif" width="400" height="300" alt="SAC from good initial point on combining 128 pulses."/>
 
-<img src=""pulse-stacking-gif/7-stage-CPS@SPGDM@good-init.gif" width="400" height="300" alt="SPGDM from good initial point"/><img src=""pulse-stacking-gif/7-stage-CPS@SPGD@good-init.gif" width="400" height="300" alt="SPGD from good initial point on combining 128 pulses."/>
+<img src="pulse-stacking-gif/7-stage-CPS@SPGDM@good-init.gif" width="400" height="300" alt="SPGDM from good initial point"/><img src="pulse-stacking-gif/7-stage-CPS@SPGD@good-init.gif" width="400" height="300" alt="SPGD from good initial point on combining 128 pulses."/>
 
 
 ## Experiments on combining 32 pulses
@@ -41,7 +41,7 @@ SAC-SPGDM still has the fastest convergence speed among them. It is worth noting
 
 <img src="pulse-stacking-gif/5-stage-CPS@SAC-SPGDM@good-init.gif" width="400" height="300" alt="SAC-SPGDM from good initial point"/><img src=""pulse-stacking-gif/5-stage-CPS@SAC@good-init.gif" width="400" height="300" alt="SAC from good initial point on combining 32 pulses."/>
 
-<img src=""pulse-stacking-gif/5-stage-CPS@SPGDM@good-init.gif" width="400" height="300" alt="SPGDM from good initial point"/><img src=""pulse-stacking-gif/5-stage-CPS@SPGD@good-init.gif" width="400" height="300" alt="SPGD from good initial point on combining 32 pulses."/>
+<img src="pulse-stacking-gif/5-stage-CPS@SPGDM@good-init.gif" width="400" height="300" alt="SPGDM from good initial point"/><img src="pulse-stacking-gif/5-stage-CPS@SPGD@good-init.gif" width="400" height="300" alt="SPGD from good initial point on combining 32 pulses."/>
 
 ---
 **More experimental demonstrations  will be updated soon.**
