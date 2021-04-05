@@ -1,12 +1,12 @@
 # SAC-SPGDM
 
 ## Contents
-1. [Combining 128 pulses](#experiments-on-combining-128-pulses)  
-  1. [Controlling 7-stage CPS from bad initial state](#controlling-7-stage-coherent-pulse-stacking-from-the-bad-initial-point) 
-  2. [Controlling 7-stage CPS from good initial state](#controlling-7-stage-coherent-pulse-stacking-from-the-good-initial-point) 
-2. [Combining 32 pulses](#experiments-on-combining-32-pulses)
-  1. [Controlling 5-stage CPS from bad initial state](#controlling-5-stage-coherent-pulse-stacking-from-the-bad-initial-point) 
-  2. [Controlling 5-stage CPS from good initial state](#controlling-5-stage-coherent-pulse-stacking-from-the-good-initial-point) 
+1. [Combining 128 pulses](#experiments-on-combining-128-pulses)    
+    1. [Controlling 7-stage CPS from bad initial state](#controlling-7-stage-coherent-pulse-stacking-from-the-bad-initial-point) 
+    2. [Controlling 7-stage CPS from good initial state](#controlling-7-stage-coherent-pulse-stacking-from-the-good-initial-point) 
+2. [Combining 32 pulses](#experiments-on-combining-32-pulses)  
+    1. [Controlling 5-stage CPS from bad initial state](#controlling-5-stage-coherent-pulse-stacking-from-the-bad-initial-point) 
+    2. [Controlling 5-stage CPS from good initial state](#controlling-5-stage-coherent-pulse-stacking-from-the-good-initial-point) 
 
 
 ## Experiments on combining 128 pulses
