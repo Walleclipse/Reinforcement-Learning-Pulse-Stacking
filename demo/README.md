@@ -3,7 +3,7 @@
 ## Contents
 1. [Combining 128 pulses](#experiments-on-combining-128-pulses)
   1. [Controlling from bad initial state](#controlling-7-stage-coherent-pulse-stacking-from-the-bad-initial-point) 
-3. [Combining 32 pulses](#experiments-on-combining-32-pulses)
+2. [Combining 32 pulses](#experiments-on-combining-32-pulses)
 
 
 ## Experiments on combining 128 pulses
