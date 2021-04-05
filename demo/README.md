@@ -1,5 +1,10 @@
 # SAC-SPGDM
 
+## Contents
+1. [Combining 128 pulses](#Experiments on controlling 7-stage delay line coherent pulse stacking (combining 128 pulse))
+2. [Combining 32 pulses](#Experiments on controlling 5-stage delay line coherent pulse stacking (combining 32 pulse))
+
+
 ## Experiments on controlling 7-stage delay line coherent pulse stacking (combining 128 pulse)
 
 ### Results on controlling coherent pulse stacking from the bad initial point 
@@ -37,4 +42,4 @@ SAC-SPGDM still has the fastest convergence speed among them. It is worth noting
 
 <img src=""pulse-stacking-gif/5-stage-CPS@SPGDM@good-init.gif" width="400" height="300" alt="SPGDM from good initial point"/><img src=""pulse-stacking-gif/5-stage-CPS@SPGD@good-init.gif" width="400" height="300" alt="SPGD from good initial point on combining 32 pulses."/>
 
-## More experimental demonstrations  will be updated soon!
+### More experimental demonstrations  will be updated soon!
