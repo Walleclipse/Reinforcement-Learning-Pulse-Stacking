@@ -1,7 +1,7 @@
 # SAC-SPGDM
 
 ## Contents
-1. [Combining 128 pulses](#Experiments on controlling 7-stage delay line coherent pulse stacking (combining 128 pulse))
+1. [Combining 128 pulses](#Experiments%on%controlling%7-stage%delay%line%coherent%pulse%stacking%(combining 128 pulse))
 2. [Combining 32 pulses](#Experiments on controlling 5-stage delay line coherent pulse stacking (combining 32 pulse))
 
 
