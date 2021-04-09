@@ -1,8 +1,8 @@
-# Combining the power of reinforcement learning and stochastic parallel gradient decent for optimizing the delay lines of pulse stacking
+# Robust non-convex control algorithms for coherent pulse stacking
 
 *A. Abuduweili, Z. Zhang et al.*
 
-In this work, we incorporate momentum into Stochastic Parallel Gradient Descent (SPGD) to create the algorithm called SPGDM. By incorporating  SPGDM with Soft Actor-Critic (SAC), one of the stable reinforcement learning, we propose a robust and fast algorithm called SAC-SPGDM. We simulated the coherent pulse stacking of 128 pulses by delay line controlling and stabilization. The experiment proved its feasibility and demonstrated it as a robust and fast controller. 
+For the fast and robust control of the delay lines for coherent pulse stacking, we combined the Stochastic Parallel Gradient Descent with momentum (SPGDM) and the Soft Actor-Critic (SAC) into a powerful algorithm SAC-SPGDM. The simulation shows that the algorithm can quickly achieve the optimal delay-line positions for 7-stage 128 pulses stacking within 20 steps.
 
 Code will be released soon.
 
