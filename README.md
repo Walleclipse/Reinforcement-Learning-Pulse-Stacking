@@ -1,4 +1,4 @@
-# Reinforcement learning based robust control algorithms for coherent pulse stacking
+# Reinforcement learning for coherent pulse stacking
 
 Abulikemu Abuduweili, Jie Wang, Bowei Yang, Aimin Wang, and Zhigang Zhang, [Reinforcement learning based robust control algorithms for coherent pulse stacking](https://www.osapublishing.org/oe/fulltext.cfm?uri=oe-29-16-26068), Optics Express 2021.
 
