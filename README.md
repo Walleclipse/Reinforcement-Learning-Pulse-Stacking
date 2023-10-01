@@ -23,6 +23,17 @@ TD3 and SAC are capable of attaining maximum power in the OPS task by combining 
 <img src="demo/Video2.gif" width="400" height="300" alt="Experiments of Controlling 5 Stage OPS (combining 128 pulses)."/>
 
 
+## About Code
+
+Install Requirments
+```bash
+pip install numpy yaml scipy pynlo gym 
+
+```
+
+The simulation OPS environment is located in [environments/stacking_env.py](environments/stacking_env.py). 
+
+
 ## Citation
 If you find the code helpful in your research or work, please cite the following papers.
 ```BibTex
