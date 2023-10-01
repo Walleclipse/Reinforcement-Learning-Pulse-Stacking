@@ -16,11 +16,11 @@ Subsequently, we provide the benchmark results of several reinforcement learning
 ## Tasks
 In this paper, we present OPS (Optical Pulse Stacking), an open and scalable simulator designed for controlling typical optical systems. 
 A visual illustration of the stacking procedure for combining two pulses is shown in the following gif.   
-<img src="demo/Video1_SystemConfiguration_StackingTwoPulsesWithTimeDelay.gif" width="400" height="300" alt="System Configuration of Stacking TwoPulses With Time Delay Controller."/>
+<img src="demo/Video1.gif" width="400" height="300" alt="System Configuration of Stacking TwoPulses With Time Delay Controller."/>
 
 ## Results
 TD3 and SAC are capable of attaining maximum power in the OPS task by combining many pulses into one, as shown in the following gif.    
-<img src="demo/Video2_Experiments_Controlling5StageOPS.gif" width="400" height="300" alt="Experiments of Controlling 5 Stage OPS (combining 128 pulses)."/>
+<img src="demo/Video2.gif" width="400" height="300" alt="Experiments of Controlling 5 Stage OPS (combining 128 pulses)."/>
 
 
 ## Citation
