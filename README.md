@@ -30,8 +30,15 @@ Install Requirments
 pip install numpy yaml scipy pynlo gym 
 
 ```
+Simply training TD3 algorithm on -stage hard environment:
+```bash
+python main.py --stage 5 --difficulty hard --algo td3
+
+```
+
 
 The simulation OPS environment is located in [environments/stacking_env.py](environments/stacking_env.py). 
+
 
 
 ## Citation
