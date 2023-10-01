@@ -3,7 +3,8 @@
 
 This repository introduces the Optical Control Environment (OPS) designed for benchmarking reinforcement learning algorithms, as illustrated in the following papers:
  
-Abulikemu Abuduweili, Jie Wang, Bowei Yang, Aimin Wang, and Zhigang Zhang, "[Reinforcement learning based robust control algorithms for coherent pulse stacking](https://opg.optica.org/oe/fulltext.cfm?uri=oe-29-16-26068&id=453824)," Opt. Express, 2021.    
+Abulikemu Abuduweili, Jie Wang, Bowei Yang, Aimin Wang, and Zhigang Zhang, "[Reinforcement learning based robust control algorithms for coherent pulse stacking](https://opg.optica.org/oe/fulltext.cfm?uri=oe-29-16-26068&id=453824)," Opt. Express, 2021.   
+
 Abulikemu Abuduweili, and Changliu Liu, "[An Optical Control Environment for Benchmarking Reinforcement Learning Algorithms](https://openreview.net/forum?id=61TKzU9B96)," TMLR, 2023.
 
 
@@ -30,19 +31,15 @@ If you find the code helpful in your research or work, please cite the following
   author={Abuduweili, Abulikemu and Liu, Changliu},
   booktitle={Transactions on Machine Learning Research},
   year={2023},
-url={https://openreview.net/forum?id=61TKzU9B96},
-}    
+}
+
 @article{Abuduweili:21,
-author = {Abulikemu Abuduweili and Jie Wang and Bowei Yang and Aimin Wang and Zhigang Zhang},
-journal = {Opt. Express},
-number = {16},
-pages = {26068--26081},
-title = {Reinforcement learning based robust control algorithms for coherent pulse stacking},
-volume = {29},
-month = {Aug},
-year = {2021},
-url = {https://opg.optica.org/oe/abstract.cfm?URI=oe-29-16-26068},
-doi = {10.1364/OE.426906},
+  author = {Abulikemu Abuduweili and Jie Wang and Bowei Yang and Aimin Wang and Zhigang Zhang},
+  journal = {Opt. Express},
+  pages = {26068--26081},
+  title = {Reinforcement learning based robust control algorithms for coherent pulse stacking},
+  volume = {29},
+  year = {2021},
 }
 ```
 
