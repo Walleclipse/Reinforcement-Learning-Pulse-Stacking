@@ -3,6 +3,7 @@ import random
 import io
 import numpy as np
 import pynlo
+import collections
 from functools import partial
 import matplotlib.pyplot as plt
 import gym
@@ -20,17 +21,45 @@ class CPS_env(gym.Env):
     }
     environment_name = "Delay Line Coherent Pulse Stacking"
 
-    def __init__(self, stage=7, noise_sigma=0.001, obs_noise_sigma=0, init_nonoptimal=0.1, action_scale=0.1,
+    def __init__(self, stage=7, noise_sigma=1e-4, obs_noise_sigma=1e-5, init_nonoptimal=0.1, action_scale=0.01,
                  obs_step=1, obs_signal=['power', 'pulse', 'pzm'], normalized_action=False, normalized_observation=True,
-                 max_pzm=1,seed=None, max_episode_steps=None, reward_threshold=None,spgd=False,perturb_scale=1e-3,**kwargs):
+                 max_pzm=2,seed=None, max_episode_steps=None, reward_threshold=None,spgd=False,perturb_scale=1e-3,
+                 dict_observation=False,noise_loc=0., init_loc=0.,noise_evolve=0.,difficulty='custom'):
         '''
         init_state = [ 'optimal','random','non_optimal']
         obs_feat =['power','action','PZM','pulse']
         '''
+        self.difficulty = difficulty
+        if self.difficulty=='easy':
+            print('create environemnt with easy mode')
+            init_nonoptimal = 0.08
+            obs_noise_sigma = 1e-4
+            noise_sigma = 5e-4
+            noise_evolve = 0.0
+            noise_loc = 0.0
+            init_loc = 0.0
+        elif self.difficulty=='medium':
+            print('create environemnt with medium mode')
+            init_nonoptimal = 0.13
+            obs_noise_sigma = 1e-4
+            noise_sigma = 5e-4
+            noise_evolve = 0.0
+            noise_loc = 0.0
+            init_loc = 0.0
+        elif self.difficulty=='hard':
+            print('create environemnt with hard mode')
+            init_nonoptimal = 0.15
+            obs_noise_sigma = 1e-4
+            noise_sigma = 5e-4
+            noise_evolve = 0.1
+            noise_loc = 0.0
+            init_loc = 0.0
         self.stage = stage
         self.noise_sigma = noise_sigma  # /stage
+        self.noise_loc = noise_loc
         self.obs_noise_sigma = obs_noise_sigma
         self.init_nonoptimal = init_nonoptimal  # /stage
+        self.init_loc = init_loc
         self.action_scale = action_scale
         self.normalized_action = normalized_action
         self.normalized_observation = normalized_observation
@@ -41,8 +70,11 @@ class CPS_env(gym.Env):
         self.spgd = spgd
         self.perturb_scale = perturb_scale
         self.max_episode_steps = max_episode_steps
+        self.dict_observation = dict_observation
+        self.noise_evolve = noise_evolve
+        self.reset_steps = 0
         self.elapsed_steps = 0
-        self.viewer = None    
+        self.viewer = None
         self.seed(seed)
         self.init_state()
 
@@ -83,20 +115,25 @@ class CPS_env(gym.Env):
         l0_list = init_PZM_l0(self.stage, self.frep_MHz)
 
         noise_sigma = self.noise_sigma * self.pulseWL_mm
+        noise_loc = self.noise_loc * self.pulseWL_mm
         init_nois_scale = self.init_nonoptimal * self.pulseWL_mm
+        init_noise_loc = self.init_loc * self.pulseWL_mm
 
         for ii in range(1, self.stage + 1):
             fold = 2
             optim_l0 = l0_list[ii] / fold
             l0 = optim_l0
             if init_nois_scale < 0:
-                l0 += ((-1) ** ii) * init_nois_scale
+                l0 += ((-1) ** ii) * init_nois_scale + init_noise_loc
             elif init_nois_scale > 0:
-                l0 += self.np_random.normal(loc=0, scale=init_nois_scale, size=1)[0]
+                l_noise = self.np_random.normal(loc=init_noise_loc, scale=init_nois_scale, size=1)
+                l_noise = np.clip(l_noise, init_noise_loc - 2 * init_nois_scale, init_noise_loc + 2 *init_nois_scale)[0]
+                l0 += l_noise
             # l0 += np.random.uniform(low=init_nois_scale, high=-init_nois_scale, size=1)[0]
 
             ss = StackStage(PZM_fold=fold, PZM_l0=l0, optim_l0=optim_l0,
-                            noise_sigma=noise_sigma, np_rnd=self.np_random, name='s' + str(ii))
+                            noise_sigma=noise_sigma,noise_loc=noise_loc,
+                            np_rnd=self.np_random, name='s' + str(ii))
             stacks_list.append(ss)
 
         self.stacks_list = stacks_list
@@ -109,7 +146,7 @@ class CPS_env(gym.Env):
                                                 dtype=np.float32)
         self.norm_act_fn = NormalizedAct(action_space=self.space_dict['act/pzm'])
         if self.normalized_action:
-            self.action_space = spaces.Box(low=-1, high=1, shape=(self.stage,), dtype=np.float32)
+            self.action_space = spaces.Box(low=-1., high=1., shape=(self.stage,), dtype=np.float32)
         else:
             self.action_space = self.space_dict['act/pzm']
 
@@ -135,22 +172,32 @@ class CPS_env(gym.Env):
 
         obs_low, obs_high = [], []
         t_obs_low, t_obs_high = [], []
+        obs_dict_size=[]
+        o_size=0
         for sig in self.obs_signal:
             if sig == 'power':
                 obs_low += pow_low
                 obs_high += pow_high
                 t_obs_low += [math.floor(self.orig_f2_power)*2] # *1
                 t_obs_high += [math.ceil(self.max_f2_power) / 2]
+                o_size+=len(obs_low)
+                obs_dict_size.append((sig, o_size))
             if sig == 'pulse':
                 obs_low += pulse_low
                 obs_high += pulse_high
                 t_obs_low += list([0] * dim)
                 t_obs_high += list([self.max_avg_power / self.stage] * dim)
+                o_size += len(pulse_low)
+                obs_dict_size.append((sig, o_size))
             if sig == 'pzm':
                 obs_low += pzm_low
                 obs_high += pzm_high
                 t_obs_low += [2 ** i * mean_len - self.pzm_range / 2 for i in range(len(pzm_lens))]
                 t_obs_high += [2 ** i * mean_len + self.pzm_range / 2 for i in range(len(pzm_lens))]
+                o_size += len(pzm_low)
+                obs_dict_size.append((sig,o_size))
+
+        self.obs_dict_size = obs_dict_size
 
         obs_space = spaces.Box(low=np.array(t_obs_low), high=np.array(t_obs_high), dtype=np.float32)
         self.norm_obs_fn = NormalizedAct(action_space=obs_space)
@@ -169,9 +216,33 @@ class CPS_env(gym.Env):
         if self.normalized_observation:
             low=self.norm_obs_fn.normalize(np.array(obs_low),clip=False)
             high = self.norm_obs_fn.normalize(np.array(obs_high), clip=False)
-            self.observation_space = spaces.Box(low=low, high=high, dtype=np.float32)
+            if not self.dict_observation:
+                self.observation_space = spaces.Box(low=low, high=high, dtype=np.float32)
+            else:
+                obs_space_dic={}
+                for ii in range(len(self.obs_dict_size)):
+                    k = self.obs_dict_size[ii][0]
+                    if ii==0:
+                        a = 0
+                    else:
+                        a=self.obs_dict_size[ii-1][1]
+                    b = self.obs_dict_size[ii][1]
+                    obs_space_dic[k] = spaces.Box(low=low[a:b], high=high[a:b], dtype=np.float32)
+                self.observation_space = spaces.Dict(spaces=obs_space_dic)
         else:
-            self.observation_space = spaces.Box(low=np.array(obs_low), high=np.array(obs_high), dtype=np.float32)
+            if not self.dict_observation:
+                self.observation_space = spaces.Box(low=np.array(obs_low), high=np.array(obs_high), dtype=np.float32)
+            else:
+                obs_space_dic={}
+                for ii in range(len(self.obs_dict_size)):
+                    k = self.obs_dict_size[ii][0]
+                    if ii==0:
+                        a = 0
+                    else:
+                        a=self.obs_dict_size[ii-1][1]
+                    b = self.obs_dict_size[ii][1]
+                    obs_space_dic[k] = spaces.Box(low=np.array(obs_low)[a:b], high=np.array(obs_high)[a:b], dtype=np.float32)
+                self.observation_space = spaces.Dict(spaces=obs_space_dic)
 
         self.reward_range = (
             math.floor(self._cal_reward(self.orig_f2_power)), math.ceil(self._cal_reward(self.max_f2_power)))
@@ -229,11 +300,24 @@ class CPS_env(gym.Env):
         if self.obs_noise_sigma > 0:
             obs += self.obs_noise()
         obs = obs.flatten()
+        if self.dict_observation:
+            obs_dic=collections.OrderedDict()
+            for ii in range(len(self.obs_dict_size)):
+                k = self.obs_dict_size[ii][0]
+                if ii == 0:
+                    a = 0
+                else:
+                    a = self.obs_dict_size[ii - 1][1]
+                b = self.obs_dict_size[ii][1]
+                obs_dic[k] = obs[a:b]
+            obs = obs_dic
         return obs
 
     def _cal_reward(self, power):
         reward = -(power - self.max_f2_power) ** 2 / (self.max_f2_power * self.initial_f2_power)
-        reward = 2*(reward+0.5)
+        #reward = -(self.max_f2_power - power) ** 2 / (self.max_f2_power - self.initial_f2_power) ** 2
+        reward = reward/self.stage + 1
+        #reward = 2*(reward+0.5)
         return reward
 
     def get_score_to_win(self):
@@ -290,7 +374,10 @@ class CPS_env(gym.Env):
         return action
 
     def cal_grad(self,prev_observation):
-        y_0 = prev_observation[0]
+        if self.dict_observation:
+            y_0 = prev_observation['power']
+        else:
+            y_0 = prev_observation[0]
 
         delta_x = self.perturb(perturb_scale=self.perturb_scale)
 
@@ -300,28 +387,15 @@ class CPS_env(gym.Env):
         f2_power = round(f2_power, 2)
         pzm_lens = self.pulse_stacking.pzm()
         observation_1 = self._prep_observation(f2_power, ret_pulse, pzm_lens)
-        y_1 = observation_1[0]
+        if self.dict_observation:
+            y_1 = observation_1['power']
+        else:
+            y_1 = observation_1[0]
         grad = (y_1 - y_0) * delta_x
 
         self.update(-delta_x)
 
         return grad
-
-    def plot_output(self):
-        orig_pulses = self.orig_pulses
-        pulses = self.current_info['pulse']
-        max_power = self.max_avg_power
-
-        plt.plot(orig_pulses['T_ps'], orig_pulses['I'] / max_power, label='Original_Pulses')
-        plt.plot(pulses['T_ps'], pulses['I'] / max_power, label='Stacked_Pulses')
-        plt.legend()
-        plt.xlabel('T_ps')
-        plt.ylabel('A.U.')
-        plt.title('Oscilloscope Pulses')
-        plt.show()
-        print(
-            f"Current Power={self.current_info['f2_power']}, Maximum Power={self.max_f2_power}, Original Power={self.orig_f2_power}")
-        return
 
     def print_log(self):
         logs = f"*** Step={self.elapsed_steps}, Reward={self.current_info['reward']} ***\n"
@@ -329,6 +403,13 @@ class CPS_env(gym.Env):
         print(logs)
 
     def reset(self):
+        if self.noise_evolve>0 and self.reset_steps>0:
+            estep = min(10, self.reset_steps)
+            size = min(10, estep * self.noise_evolve)
+            ratio = self.np_random.uniform(low=-size,high=size, size=1)[0]
+            self.init_loc = ratio * self.init_nonoptimal
+            self.noise_loc = ratio * self.noise_sigma
+            #print(f'Noise evolve with step={self.reset_steps}, init_non_optimal_loc={self.init_loc}, noise_loc={self.noise_loc}')
         self.elapsed_steps = 0
         self._init_stackstage()
         self.pulse_stacking = MultiStack(stacks_list=self.stacks_list)
@@ -337,6 +418,7 @@ class CPS_env(gym.Env):
         if self.obs_step > 1:
             for _ in range(self.obs_step - 1):
                 observation, info = self.measure(add_noise=True)
+        self.reset_steps += 1
         return observation
 
     def step(self, action):
@@ -348,15 +430,23 @@ class CPS_env(gym.Env):
             grad = self.cal_grad(observation)
         else:
             grad = None
+        reward = info['reward']
+        #if reward > self.reward_range[1]*0.9:
+        #    reward = reward*10
+        #elif done:
+        #    max_time = self.max_episode_steps if self.max_episode_steps is not None else 1000
+        #    reward = self.reward_range[0] * (max_time - self.elapsed_steps)
+
         info['grad']=grad
         self.elapsed_steps += 1
+        #print('elapsed time', self.elapsed_steps )
         if self.max_episode_steps is not None:
             if self.elapsed_steps >= self.max_episode_steps:
                 done = True
                 info['TimeLimit.truncated'] = True
             else:
                 info['TimeLimit.truncated'] = False
-        return observation, info['reward'], done, info
+        return observation, reward, done, info
 
     def render(self, mode='human'):
         from .utils import Image
@@ -384,6 +474,37 @@ class CPS_env(gym.Env):
         plt.close()
         return rend_img
 
+
+    def plot_output(self, save_path=''):
+        orig_pulses = self.orig_pulses
+        pulses = self.current_info['pulse']
+
+        s_I = pulses['I'][self.peak_per_ind::self.peak_per_ind]
+        s_T = pulses['T_ps'][self.peak_per_ind::self.peak_per_ind]
+        plt.figure(figsize=(5, 4))
+        plt.plot(pulses['T_ps'], pulses['I'] / self.max_avg_power, color='r')
+        plt.scatter(s_T, s_I / self.max_avg_power, marker='*', color='b')
+        plt.grid()
+        plt.ylim((0, 1))
+        plt.xlabel('Time')
+        plt.ylabel('Intensity (A.U.)')
+        #plt.title('Oscilloscope Pulses')
+        if len(save_path)>0:
+            plt.savefig(save_path)
+        plt.show()
+
+        plt.figure(figsize=(5, 4))
+        plt.plot(pulses['T_ps'], orig_pulses['I']/ self.max_avg_power, label='Original_Pulses',color='r')
+        plt.plot(pulses['T_ps'], pulses['I'] / self.max_avg_power, label='Stacked_Pulses')
+        plt.legend(loc='upper right')
+        plt.xlabel('Time')
+        plt.ylabel('Intensity (A.U.)')
+        plt.title('Oscilloscope Pulses')
+        plt.show()
+
+        self.print_log()
+        return
+        
     def close(self):
         self.elapsed_steps = 0
         if self.viewer:

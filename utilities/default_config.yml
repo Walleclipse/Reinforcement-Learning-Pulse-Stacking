@@ -1,0 +1,82 @@
+env:
+  obs_step: 1
+  obs_signal: ['power', 'pulse', 'pzm']
+  action_scale: 0.01
+  normalized_action: True
+  normalized_observation: True
+  spgd: False
+  perturb_scale: 0.001
+  dict_observation: True
+  max_pzm: 3
+  noise_loc: 0
+  init_loc: 0
+
+algo:
+  policy: 'MultiInputPolicy'
+  policy_kwargs: "dict(net_arch=[256, 256,256])"
+
+ddpg:
+  buffer_size: 10000
+  gamma: 0.98
+  learning_starts: 1000
+  noise_type: 'normal'
+  noise_std: 0.7
+  gradient_steps: 1
+  train_freq: 1
+  learning_rate: 0.001
+  tau: 0.005
+  policy_kwargs: "dict(net_arch=[256, 256])"
+  batch_size: 256
+
+ppo:
+  n_steps: 512
+  gae_lambda: 0.95
+  gamma: 0.99 # 0.9
+  n_epochs: 10 # 10
+  ent_coef: 0.001 # 0.001
+  learning_rate: 0.0003
+  use_sde: False # true
+  sde_sample_freq: -1 # 4
+  clip_range: 0.2
+  max_grad_norm: 0.5
+  vf_coef: 0.5
+  policy_kwargs: "dict(net_arch=[dict(pi=[256, 256], vf=[256, 256])])"
+  batch_size: 64 # or 128
+
+td3:
+  buffer_size: 100000
+  gamma: 0.98 # or 0.99
+  learning_starts: 1000
+  noise_type: 'normal'
+  noise_std: 0.7
+  gradient_steps: 100 # or 10
+  train_freq: 100 # or 10
+  learning_rate: 0.0003
+  policy_kwargs: "dict(net_arch=[256, 256])"
+  batch_size: 256
+  episodic: False # or True
+
+sac:
+  buffer_size: 100000
+  gamma: 0.99
+  learning_starts: 1000
+  learning_rate: 0.0003
+  use_sde: False
+  train_freq: 1
+  gradient_steps: 1
+  tau: 0.002
+  policy_kwargs: "dict(net_arch=[256,256,256])"
+  batch_size: 256
+
+a2c:
+  ent_coef: 0.0
+  max_grad_norm: 0.5
+  n_steps: 8
+  gae_lambda: 0.9
+  vf_coef: 0.4
+  gamma: 0.99
+  use_rms_prop: True
+  normalize_advantage: False
+  learning_rate: 0.001
+  use_sde: True
+  policy_kwargs: "dict(net_arch=[ 256, 256])"

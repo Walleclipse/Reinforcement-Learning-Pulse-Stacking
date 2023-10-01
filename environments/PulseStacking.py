@@ -150,17 +150,18 @@ class PhaseModulator:
 		return pulse_train
 
 class StackStage:
-	def __init__(self,PZM_fold=1, PZM_l0=0, optim_l0=0, noise_sigma=1.,np_rnd=None,name='s1'):
+	def __init__(self,PZM_fold=1, PZM_l0=0, optim_l0=0, noise_sigma=1.,noise_loc=0., np_rnd=None,name='s1'):
 		self.fold = PZM_fold
 		self.l0 = PZM_l0
 		self.noise_sigma = noise_sigma
+		self.noise_loc = noise_loc
 		self.optim_l0 = optim_l0
 
 		if np_rnd is not None:
 			self.np_random = np_rnd
 		else:
 			self.np_random = np.random.RandomState()
-		self.noise = partial(self.np_random.normal,loc=0,scale=noise_sigma,size=1)
+		self.noise = partial(self.np_random.normal,loc=noise_loc,scale=noise_sigma,size=1)
 
 		self.name = name
 		self.L = self.l0
@@ -194,7 +195,7 @@ class StackStage:
 
 	def free_run(self,count=1):
 		for ii in range(count):
-			raw_noise = np.clip(self.noise(),-3*self.noise_sigma,3*self.noise_sigma)[0]
+			raw_noise = np.clip(self.noise(),self.noise_loc-3*self.noise_sigma,self.noise_loc+3*self.noise_sigma)[0]
 			self.L += raw_noise
 
 	def infer(self,pulse_train):
