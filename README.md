@@ -39,6 +39,7 @@ python main.py --stage 5 --difficulty hard --algo td3
 
 The simulation OPS environment is located in [environments/stacking_env.py](environments/stacking_env.py). 
 
+The RL algorithms are based on [stable-baselines3](https://github.com/DLR-RM/stable-baselines3). 
 
 
 ## Citation
