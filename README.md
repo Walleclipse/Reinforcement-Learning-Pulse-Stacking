@@ -30,7 +30,7 @@ Install Requirments
 pip install numpy yaml scipy pynlo gym 
 
 ```
-Simply training TD3 algorithm on -stage hard environment:
+Training the TD3 algorithm on a 5-stage hard-mode OPS environment:
 ```bash
 python main.py --stage 5 --difficulty hard --algo td3
 
