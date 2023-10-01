@@ -13,7 +13,7 @@ Deep reinforcement learning has the potential to address various scientific prob
 Subsequently, we provide the benchmark results of several reinforcement learning algorithms on the proposed simulation environment. The experimental findings demonstrate the superiority of off-policy reinforcement learning approaches over traditional control algorithms in navigating the intricacies of complex optical control environments. 
 
 
-## Tasks
+## Simulation Environment
 In this paper, we present OPS (Optical Pulse Stacking), an open and scalable simulator designed for controlling typical optical systems. 
 A visual illustration of the stacking procedure for combining two pulses is shown in the following gif.   
 <img src="demo/Video1.gif" width="400" height="300" alt="System Configuration of Stacking TwoPulses With Time Delay Controller."/>
